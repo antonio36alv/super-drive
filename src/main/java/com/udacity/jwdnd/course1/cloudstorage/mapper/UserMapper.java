@@ -1,6 +1,6 @@
-package com.antonioalv.review.mapper;
+package com.udacity.jwdnd.course1.cloudstorage.mapper;
 
-import com.antonioalv.review.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.entity.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
