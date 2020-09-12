@@ -1,7 +1,7 @@
-package com.antonioalv.review.service;
+package com.udacity.jwdnd.course1.cloudstorage.services;
 
-import com.antonioalv.review.mapper.UserMapper;
-import com.antonioalv.review.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
+import com.udacity.jwdnd.course1.cloudstorage.entity.User;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,7 +15,8 @@ public class AuthenticationService implements AuthenticationProvider {
     private UserMapper userMapper;
     private HashService hashService;
 
-    public AuthenticationService(UserMapper userMapper, HashService hashService) {
+    public AuthenticationService(
+            UserMapper userMapper, HashService hashService) {
         this.userMapper = userMapper;
         this.hashService = hashService;
     }

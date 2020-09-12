@@ -1,7 +1,7 @@
-package com.antonioalv.review.service;
+package com.udacity.jwdnd.course1.cloudstorage.services;
 
-import com.antonioalv.review.mapper.UserMapper;
-import com.antonioalv.review.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
+import com.udacity.jwdnd.course1.cloudstorage.entity.User;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
