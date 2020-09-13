@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.service;
 
+import com.udacity.jwdnd.course1.cloudstorage.entity.File;
 import com.udacity.jwdnd.course1.cloudstorage.entity.User;
 import com.udacity.jwdnd.course1.cloudstorage.exception.StorageException;
 import com.udacity.jwdnd.course1.cloudstorage.exception.StorageFileNotFoundException;
@@ -30,12 +31,14 @@ public class StorageServiceImpl implements StorageService {
     private final Path rootLocation;
     private FileMapper fileMapper;
     private UserMapper userMapper;
+    private final UserService userService;
     final static Logger logger = LoggerFactory.getLogger(StorageServiceImpl.class);
 
     @Autowired
-    public StorageServiceImpl(StorageProperties properties, FileMapper fileMapper, UserMapper userMapper) {
+    public StorageServiceImpl(StorageProperties properties, FileMapper fileMapper, UserService userService, UserMapper userMapper) {
         this.rootLocation = Paths.get(properties.getLocation());
         this.fileMapper = fileMapper;
+        this.userService = userService;
         this.userMapper= userMapper;
     }
 
@@ -52,20 +55,24 @@ public class StorageServiceImpl implements StorageService {
                 return "Cannot store file with relative path outside current directory "
                                 + filename;
             }
-            try (InputStream inputStream = file.getInputStream()) {
+//            try (InputStream inputStream = file.getInputStream()) {
 //                Files.copy(inputStream, this.rootLocation.resolve(filename),
 //                        StandardCopyOption.REPLACE_EXISTING);
 //                MultipartFile bytes = file.getBytes();
+//                System.out.println(userName);
+//                System.out.println("fuck");
+//                System.out.println(String.valueOf(user.getUserId()));
+//                System.out.println("ceiling");
+            System.out.println(userName);
                 User user = userMapper.getUser(userName);
-                System.out.println(userName);
-                System.out.println("fuck");
-                System.out.println(String.valueOf(user.getUserId()));
-                System.out.println("ceiling");
                 Integer userId = user.getUserId();
-                    fileMapper.insertFile(file.getOriginalFilename(), file.getContentType(),
-                                        String.valueOf(file.getSize()), userId, file.getBytes());
+//                    fileMapper.insertFile(file.getOriginalFilename(), file.getContentType(),
+//                                        String.valueOf(file.getSize()), userId, file.getBytes());
+            System.out.println(userId);
+                fileMapper.insertFile(new File(null, file.getOriginalFilename(), file.getContentType(), String.valueOf(file.getSize()),
+                                                userId, file.getBytes()));
                 return "You successfully uploaded " + file.getOriginalFilename();
-            }
+//            }
         }
         catch (IOException e) {
             return "Failed to store file " + filename;
