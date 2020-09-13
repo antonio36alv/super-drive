@@ -1,11 +1,11 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.exception.StorageFileNotFoundException;
+import com.udacity.jwdnd.course1.cloudstorage.service.AuthenticationFacade;
 import com.udacity.jwdnd.course1.cloudstorage.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +21,13 @@ import java.util.stream.Collectors;
 public class HomeController {
 
     private final StorageService storageService;
+    private final AuthenticationFacade authenticationFacade;
+
 
     @Autowired
-    public HomeController(StorageService storageService) {
+    public HomeController(StorageService storageService, AuthenticationFacade authenticationFacade) {
         this.storageService = storageService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @GetMapping
@@ -42,22 +45,23 @@ public class HomeController {
         return "uploadForm";
     }
 
-    @GetMapping("/files")
-    @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+//    @GetMapping("/files")
+//    @ResponseBody
+//    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
 
-        Resource file = storageService.loadAsResource(filename);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-    }
+//        Resource file = storageService.loadAsResource(filename);
+//        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+//                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+//    }
 
     @PostMapping("/fileUpload")
     public String saveFile(@RequestParam("fileUpload") MultipartFile fileUpload,
-                           RedirectAttributes redirectAttributes) {
+                           RedirectAttributes redirectAttributes, Authentication authentication) {
 
-    storageService.store(fileUpload);
+//    Authentication authentication = authenticationFacade.getAuthentication();
+    String message = storageService.store(fileUpload, authentication.getName());
     redirectAttributes.addFlashAttribute("message",
-            String.format("You successfully uploaded", fileUpload.getOriginalFilename()));
+            String.format("%s", message));
 
     return "redirect:/home";
     }

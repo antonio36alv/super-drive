@@ -7,6 +7,7 @@ public class User {
     public String salt;
     public String password;
     public String firstName;
+    public String lastName;
 
     public User(Integer userId, String username, String salt, String password, String firstName, String lastName) {
         this.userId = userId;
@@ -65,5 +66,4 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String lastName;
 }

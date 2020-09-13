@@ -9,9 +9,9 @@ public class File {
     public String contentType;
     public String fileSize;
     public Integer userId;
-    public MultipartFile fileData;
+    public byte[] fileData;
 
-    public File(Integer fileId, String fileName, String contentType, String fileSize, Integer userId, MultipartFile fileData) {
+    public File(Integer fileId, String fileName, String contentType, String fileSize, Integer userId, byte[] fileData) {
         this.fileId = fileId;
         this.fileName = fileName;
         this.contentType = contentType;
@@ -60,11 +60,11 @@ public class File {
         this.userId = userId;
     }
 
-    public MultipartFile getFileData() {
+    public byte[] getFileData() {
         return fileData;
     }
 
-    public void setFileData(MultipartFile fileData) {
+    public void setFileData(byte[] fileData) {
         this.fileData = fileData;
     }
 }

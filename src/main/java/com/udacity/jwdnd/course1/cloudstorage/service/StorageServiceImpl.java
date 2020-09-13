@@ -1,7 +1,12 @@
 package com.udacity.jwdnd.course1.cloudstorage.service;
 
+import com.udacity.jwdnd.course1.cloudstorage.entity.User;
 import com.udacity.jwdnd.course1.cloudstorage.exception.StorageException;
 import com.udacity.jwdnd.course1.cloudstorage.exception.StorageFileNotFoundException;
+import com.udacity.jwdnd.course1.cloudstorage.mapper.FileMapper;
+import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,32 +28,47 @@ import java.util.stream.Stream;
 public class StorageServiceImpl implements StorageService {
 
     private final Path rootLocation;
+    private FileMapper fileMapper;
+    private UserMapper userMapper;
+    final static Logger logger = LoggerFactory.getLogger(StorageServiceImpl.class);
 
     @Autowired
-    public StorageServiceImpl(StorageProperties properties) {
+    public StorageServiceImpl(StorageProperties properties, FileMapper fileMapper, UserMapper userMapper) {
         this.rootLocation = Paths.get(properties.getLocation());
+        this.fileMapper = fileMapper;
+        this.userMapper= userMapper;
     }
 
     @Override
-    public void store(MultipartFile file) {
+    public String store(MultipartFile file, String userName) {
+
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {
-                throw new StorageException("Failed to store empty file " + filename);
+                return "Failed to store empty file " + filename;
             }
             if (filename.contains("..")) {
                 // This is a security check
-                throw new StorageException(
-                        "Cannot store file with relative path outside current directory "
-                                + filename);
+                return "Cannot store file with relative path outside current directory "
+                                + filename;
             }
             try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, this.rootLocation.resolve(filename),
-                        StandardCopyOption.REPLACE_EXISTING);
+//                Files.copy(inputStream, this.rootLocation.resolve(filename),
+//                        StandardCopyOption.REPLACE_EXISTING);
+//                MultipartFile bytes = file.getBytes();
+                User user = userMapper.getUser(userName);
+                System.out.println(userName);
+                System.out.println("fuck");
+                System.out.println(String.valueOf(user.getUserId()));
+                System.out.println("ceiling");
+                Integer userId = user.getUserId();
+                    fileMapper.insertFile(file.getOriginalFilename(), file.getContentType(),
+                                        String.valueOf(file.getSize()), userId, file.getBytes());
+                return "You successfully uploaded " + file.getOriginalFilename();
             }
         }
         catch (IOException e) {
-            throw new StorageException("Failed to store file " + filename, e);
+            return "Failed to store file " + filename;
         }
     }
 
