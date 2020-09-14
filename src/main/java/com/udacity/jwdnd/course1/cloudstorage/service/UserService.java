@@ -35,9 +35,4 @@ public class UserService {
         return userMapper.getUser(username);
     }
 
-
-    public Integer getUserId() {
-        return userMapper.getUserId();
-//        return null;
-    }
 }

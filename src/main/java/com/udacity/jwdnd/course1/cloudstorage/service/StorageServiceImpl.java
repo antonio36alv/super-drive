@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -42,6 +43,12 @@ public class StorageServiceImpl implements StorageService {
         this.userMapper= userMapper;
     }
 
+
+    public List<File> getUserFiles(String userName) {
+
+        return fileMapper.getFiles(userMapper.getUser(userName).getUserId());
+    }
+
     @Override
     public String store(MultipartFile file, String userName) {
 
@@ -55,24 +62,12 @@ public class StorageServiceImpl implements StorageService {
                 return "Cannot store file with relative path outside current directory "
                                 + filename;
             }
-//            try (InputStream inputStream = file.getInputStream()) {
-//                Files.copy(inputStream, this.rootLocation.resolve(filename),
-//                        StandardCopyOption.REPLACE_EXISTING);
-//                MultipartFile bytes = file.getBytes();
-//                System.out.println(userName);
-//                System.out.println("fuck");
-//                System.out.println(String.valueOf(user.getUserId()));
-//                System.out.println("ceiling");
-            System.out.println(userName);
-                User user = userMapper.getUser(userName);
-                Integer userId = user.getUserId();
-//                    fileMapper.insertFile(file.getOriginalFilename(), file.getContentType(),
-//                                        String.valueOf(file.getSize()), userId, file.getBytes());
-            System.out.println(userId);
-                fileMapper.insertFile(new File(null, file.getOriginalFilename(), file.getContentType(), String.valueOf(file.getSize()),
-                                                userId, file.getBytes()));
-                return "You successfully uploaded " + file.getOriginalFilename();
-//            }
+
+            User user = userMapper.getUser(userName);
+            Integer userId = user.getUserId();
+            fileMapper.insertFile(new File(null, file.getOriginalFilename(), file.getContentType(), String.valueOf(file.getSize()),
+                                           userId, file.getBytes()));
+            return "You successfully uploaded " + file.getOriginalFilename();
         }
         catch (IOException e) {
             return "Failed to store file " + filename;
