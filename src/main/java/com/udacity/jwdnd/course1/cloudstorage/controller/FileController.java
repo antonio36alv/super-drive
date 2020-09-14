@@ -39,7 +39,7 @@ public class FileController {
 //        return storageService.viewFile(fileId);
 //    }
 
- @GetMapping("/{fileId}")
+    @GetMapping("/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Integer fileId) {
         // Load file from database
         File file = storageService.viewFile(fileId);
@@ -54,8 +54,8 @@ public class FileController {
     public String deleteFile(@PathVariable Integer fileId) {
         storageService.deleteFile(fileId);
         return "redirect:/home";
-//        return null;
     }
+
     @PostMapping
     public String saveFile(@RequestParam("fileUpload") MultipartFile fileUpload, Model model,
                            RedirectAttributes redirectAttributes, Authentication authentication) {

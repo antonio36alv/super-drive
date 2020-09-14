@@ -47,12 +47,21 @@ public class StorageServiceImpl implements StorageService {
         return fileMapper.viewFile(fileId);
     }
 
+    @Override
+    public boolean checkFileExists(String fileName, Integer userId) {
+        return fileMapper.checkFileExists(fileName, userId);
+    }
+
+
     public List<File> getUserFiles(String userName) {
         return fileMapper.getFiles(userMapper.getUser(userName).getUserId());
     }
 
     @Override
     public String store(MultipartFile file, String userName) {
+
+        User user = userMapper.getUser(userName);
+        Integer userId = user.getUserId();
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
@@ -64,9 +73,10 @@ public class StorageServiceImpl implements StorageService {
                 return "Cannot store file with relative path outside current directory "
                                 + filename;
             }
+            if(checkFileExists(file.getOriginalFilename(), userId)) {
+                return "File name exists. Please rename file and try again.";
+            }
 
-            User user = userMapper.getUser(userName);
-            Integer userId = user.getUserId();
             fileMapper.insertFile(new File(null, file.getOriginalFilename(), file.getContentType(), String.valueOf(file.getSize()),
                                            userId, file.getBytes()));
             return "You successfully uploaded " + file.getOriginalFilename();

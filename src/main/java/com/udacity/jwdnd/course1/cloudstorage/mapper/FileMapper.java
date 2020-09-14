@@ -20,6 +20,13 @@ public interface FileMapper {
     Integer deleteFile(Integer id);
 
     @Select("SELECT * FROM FILES WHERE fileid = #{fileId}")
-    File viewFile(Integer id);
+    File viewFile(Integer fileId);
+
+    @Select("SELECT EXISTS(SELECT 1 FROM FILES WHERE filename = #{fileName} AND userid = #{userId})")
+//    @Select("SELECT COALESCE ((SELECT 1 FROM TUser WHERE email=#{email}), 0) ")
+    boolean checkFileExists(String fileName, Integer userId);
+
+
 
 }
+

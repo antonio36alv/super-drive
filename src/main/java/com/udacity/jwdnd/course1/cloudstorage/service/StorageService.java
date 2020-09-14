@@ -29,4 +29,6 @@ public interface StorageService {
         Integer deleteFile(Integer fileId);
 
         File viewFile(Integer fileId);
+
+        boolean checkFileExists(String fileName, Integer userId);
 }
