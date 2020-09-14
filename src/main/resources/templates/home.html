@@ -44,14 +44,15 @@
                             <table class="table table-striped" id="fileTable">
                                 <thead>
                                     <tr>
-                                        <th style="width: 20%" scope="col"></th>
-                                        <th style="width: 80%" scope="col">File Name</th>
+                                        <th style="width: 40%" scope="col"></th>
+                                        <th style="width: 60%" scope="col">File Name</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="file : ${files}">
                                     <!-- <span class="first" th:text="${file.fileId}"></span> -->
                                     <td>
+                                        <a th:href="@{/files/{fileId}(fileId = ${file.fileId})}" class="btn btn-success" th:attr="download=${file.fileName}">Download</a>
                                         <a th:href="@{/files/{fileId}(fileId = ${file.fileId})}" target="_blank" class="btn btn-success">View</a>
                                         <a th:href="@{/files/delete/{fileId}(fileId = ${file.fileId})}" class="btn btn-danger">Delete</a>
                                     </td>
