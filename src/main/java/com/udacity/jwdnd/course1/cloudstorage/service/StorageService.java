@@ -26,4 +26,6 @@ public interface StorageService {
 
         void deleteAll();
 
+        Integer deleteFile(Integer fileId);
+
 }

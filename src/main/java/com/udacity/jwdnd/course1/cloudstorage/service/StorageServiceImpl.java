@@ -117,6 +117,11 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
+    public Integer deleteFile(Integer fileId) {
+        return fileMapper.deleteFile(fileId);
+    }
+
+    @Override
     public void init() {
         try {
             Files.createDirectories(rootLocation);

@@ -27,17 +27,19 @@ public class FileController {
 
     }
 
-//    @GetMapping
-
+    @RequestMapping("/delete/{fileId}")
+    public String deleteFile(@PathVariable Integer fileId) {
+        storageService.deleteFile(fileId);
+        return "redirect:/home";
+//        return null;
+    }
     @PostMapping
     public String saveFile(@RequestParam("fileUpload") MultipartFile fileUpload, Model model,
                            RedirectAttributes redirectAttributes, Authentication authentication) {
-
+    // TODO model can probably be removed from parameters
         String message = storageService.store(fileUpload, authentication.getName());
         redirectAttributes.addFlashAttribute("message",
                 String.format("%s", message));
-
-//        model.addAttribute()
 
         return "redirect:/home";
     }
