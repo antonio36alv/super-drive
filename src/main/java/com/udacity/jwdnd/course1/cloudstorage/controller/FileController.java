@@ -4,6 +4,10 @@ import com.udacity.jwdnd.course1.cloudstorage.entity.File;
 import com.udacity.jwdnd.course1.cloudstorage.exception.StorageFileNotFoundException;
 import com.udacity.jwdnd.course1.cloudstorage.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -25,6 +29,25 @@ public class FileController {
     public FileController(StorageService storageService) {
         this.storageService = storageService;
 
+    }
+
+//    @GetMapping("/{fileId}")
+//    @ResponseBody
+//    public byte[] getImage(@PathVariable Integer fileId) throws IOException {
+//        System.out.println("wtf right now");
+//        System.out.println(fileId);
+//        return storageService.viewFile(fileId);
+//    }
+
+ @GetMapping("/{fileId}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable Integer fileId) {
+        // Load file from database
+        File file = storageService.viewFile(fileId);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(file.getContentType()))
+                .header("attachment; filename=\"" + file.getFileName() + "\"")
+                .body(new ByteArrayResource(file.getFileData()));
     }
 
     @RequestMapping("/delete/{fileId}")

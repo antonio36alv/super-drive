@@ -52,7 +52,7 @@
                                 <tr th:each="file : ${files}">
                                     <!-- <span class="first" th:text="${file.fileId}"></span> -->
                                     <td>
-                                        <a target="_blank" class="btn btn-success">View</a>
+                                        <a th:href="@{/files/{fileId}(fileId = ${file.fileId})}" target="_blank" class="btn btn-success">View</a>
                                         <a th:href="@{/files/delete/{fileId}(fileId = ${file.fileId})}" class="btn btn-danger">Delete</a>
                                     </td>
                                     <th scope="row" th:text="${file.fileName}">ExampleFile.txt</th>

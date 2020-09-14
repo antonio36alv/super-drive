@@ -28,4 +28,5 @@ public interface StorageService {
 
         Integer deleteFile(Integer fileId);
 
+        File viewFile(Integer fileId);
 }

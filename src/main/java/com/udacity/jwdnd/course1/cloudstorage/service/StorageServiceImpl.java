@@ -43,9 +43,11 @@ public class StorageServiceImpl implements StorageService {
         this.userMapper= userMapper;
     }
 
+    public File viewFile(Integer fileId) {
+        return fileMapper.viewFile(fileId);
+    }
 
     public List<File> getUserFiles(String userName) {
-
         return fileMapper.getFiles(userMapper.getUser(userName).getUserId());
     }
 
@@ -130,4 +132,5 @@ public class StorageServiceImpl implements StorageService {
             throw new StorageException("Could not initialize storage", e);
         }
     }
+
 }

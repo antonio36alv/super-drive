@@ -29,14 +29,8 @@ public class HomeController {
     @ModelAttribute("files")
     public List<File> listUploadedFiles(Model model, Authentication authentication) throws IOException {
 
-//        model.addAttribute("files", storageService.loadAll().map(path ->
-//                MvcUriComponentsBuilder.fromMethodName(HomeController.class, "serveFile",
-//                        path.getFileName().toString()).build().toUri().toString()).
-//                                                                        collect(Collectors.toList()));
-//        return model.addAttribute("files", storageService.getUserFiles(authentication.getName()));
         return storageService.getUserFiles(authentication.getName());
-//        for(String fileName : storageService.getUserFiles(authentication.getName()))
-//        model.addAttribute("files", storageService.getUserFiles(authentication.getName()).stream().map(file -> file));
     }
+
 }
 
