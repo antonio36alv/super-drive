@@ -11,6 +11,8 @@ public interface NoteService {
 
     List<Note> getNotes(Integer userId);
 
-    String deleteNote(Integer noteId);
+    Integer deleteNote(Integer noteId);
+
+    Integer updateNote(NoteForm noteForm);
 
 }

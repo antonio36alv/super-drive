@@ -80,10 +80,10 @@
                                 </thead>
                                 <tbody>
                                     <tr th:each="note : ${notes}">
+                                        <span th:text="${note.noteId}">otherwise...</span>
                                         <td>
-                                            <button type="button" class="btn btn-success">Edit</button>
-                                            <a th:ref="@{/note/delete/{noteId}(noteId = ${note.noteId})}" class="btn btn-danger">Delete</a>
-                                        <!-- <a th:href="@{/files/delete/{fileId}(fileId = ${file.fileId})}" class="btn btn-danger">Delete</a> -->
+                                            <button onclick="showNoteModal()" type="button" class="btn btn-success">Edit</button>
+                                            <a th:href="@{/note/delete/{noteId}(noteId = ${note.noteId})}" class="btn btn-danger">Delete</a>
                                         </td>
                                         <th scope="row" th:text="${note.noteTitle}">Example Note Title</th>
                                         <td th:text="${note.noteDescription}">Example Note Description </td>
@@ -102,8 +102,8 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{'/note'}" method="POST">
-                                            <input th:if="${note}" type="hidden" name="noteId" id="note-id" th:attr="value=${file.fileName}">
+                                        <form action="#" th:action="@{/note}" method="POST">
+                                            <input th:if="${note}" type="hidden" name="noteId" id="note-id" th:attr="value=${note.noteId}">
                                             <span th:if="${note}" th:text="${note.noteTitle}"></span>
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
@@ -198,6 +198,7 @@
 
         <!--For opening the note modal-->
         <script type="text/javascript">
+
             // For opening the note modal
             function showNoteModal(noteId, noteTitle, noteDescription) {
                 $('#note-id').val(noteId ? noteId : '');

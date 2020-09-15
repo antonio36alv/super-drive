@@ -5,6 +5,7 @@ import com.udacity.jwdnd.course1.cloudstorage.entity.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.service.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,18 +30,30 @@ public class NoteController {
     @PostMapping
     public String insertNote(NoteForm noteForm, Authentication authentication, Model model, RedirectAttributes redirectAttributes) {
 
-        String message;
-        Integer jawn = noteService.insertNote(noteForm, userService.getUserId(authentication.getName()));
-        redirectAttributes.addFlashAttribute("message",
-                String.format("%s", jawn));
-        redirectAttributes.addFlashAttribute("successMessage", "stuff happened");
+        if(noteService.insertNote(noteForm, userService.getUserId(authentication.getName())) != 0) {
+            model.addAttribute("successMessage");
+        } else {
+            model.addAttribute("errorMessage", "Error has occurred.");
+        }
 
         return "redirect:/result";
     }
 
     @RequestMapping("/delete/{noteId}")
-    public String deleteNote(@PathVariable Integer noteId) {
-        noteService.deleteNote(noteId);
+    public String deleteNote(@PathVariable Integer noteId, Model model) {
+
+        if(noteService.deleteNote(noteId) != 0) {
+            model.addAttribute("successMessage", "Note deleted.");
+        } else {
+            model.addAttribute("errorMessage", "Error has occurred.");
+        }
+        return "redirect:/result";
+    }
+
+    @PutMapping
+    public Integer updateNote(NoteForm noteForm) {
+        // TODO update returns the number of rows affected
+        noteService.updateNote(noteForm);
         return null;
     }
 
