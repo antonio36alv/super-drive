@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.service;
 
 import com.udacity.jwdnd.course1.cloudstorage.entity.File;
+import com.udacity.jwdnd.course1.cloudstorage.entity.Note;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,4 +32,5 @@ public interface StorageService {
         File viewFile(Integer fileId);
 
         boolean checkFileExists(String fileName, Integer userId);
+
 }

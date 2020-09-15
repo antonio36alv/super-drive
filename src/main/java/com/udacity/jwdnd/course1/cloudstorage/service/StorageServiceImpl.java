@@ -52,7 +52,6 @@ public class StorageServiceImpl implements StorageService {
         return fileMapper.checkFileExists(fileName, userId);
     }
 
-
     public List<File> getUserFiles(String userName) {
         return fileMapper.getFiles(userMapper.getUser(userName).getUserId());
     }

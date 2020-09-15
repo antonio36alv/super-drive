@@ -31,14 +31,6 @@ public class FileController {
 
     }
 
-//    @GetMapping("/{fileId}")
-//    @ResponseBody
-//    public byte[] getImage(@PathVariable Integer fileId) throws IOException {
-//        System.out.println("wtf right now");
-//        System.out.println(fileId);
-//        return storageService.viewFile(fileId);
-//    }
-
     @GetMapping("/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Integer fileId) {
         // Load file from database
