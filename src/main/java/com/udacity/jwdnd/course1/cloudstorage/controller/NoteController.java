@@ -1,18 +1,13 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.entity.Note;
 import com.udacity.jwdnd.course1.cloudstorage.entity.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.service.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/note")
@@ -29,48 +24,35 @@ public class NoteController {
 
     @PostMapping("/{noteId}")
     public String updateNote(@PathVariable Integer noteId, NoteForm noteForm, RedirectAttributes redirectAttributes) {
-        System.out.println(noteForm.getNoteId());
-        System.out.println("dlkfjsssssssssssssssssss");
-        noteForm.setNoteId(noteId);
-        System.out.println(noteForm.getNoteId());
-        noteService.updateNote(noteForm);
-        redirectAttributes.addFlashAttribute("successMessage", "Success");
+
+        if(noteService.updateNote(noteForm) != 0) {
+            redirectAttributes.addFlashAttribute("successMessage", "Success");
+        } else {
+            redirectAttributes.addFlashAttribute("failedEditMessage", "Error");
+        }
         return "redirect:/result";
     }
 
     @PostMapping
     public String insertNote(NoteForm noteForm, Authentication authentication, RedirectAttributes redirectAttributes) {
 
-        System.out.println(noteForm.getNoteId());
-        System.out.println(noteForm.getNoteTitle());
-        System.out.println(noteForm.getNoteDescription());
-
-            System.out.println("here to post and not update");
-            if(noteService.insertNote(noteForm, userService.getUserId(authentication.getName())) != 0) {
-                redirectAttributes.addFlashAttribute("successMessage", "Success");
-            } else {
-                redirectAttributes.addFlashAttribute("errorMessage", "Error");
-            }
-//        }
+        if(noteService.insertNote(noteForm, userService.getUserId(authentication.getName())) != 0) {
+            redirectAttributes.addFlashAttribute("successMessage", "Success");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error");
+        }
         return "redirect:/result";
     }
 
     @RequestMapping("/delete/{noteId}")
-    public String deleteNote(@PathVariable Integer noteId, Model model) {
+    public String deleteNote(@PathVariable Integer noteId, RedirectAttributes redirectAttributes) {
 
         if(noteService.deleteNote(noteId) != 0) {
-            model.addAttribute("successMessage", "Note deleted.");
+            redirectAttributes.addFlashAttribute("successMessage", "deleted");
         } else {
-            model.addAttribute("errorMessage", "Error has occurred.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Error");
         }
         return "redirect:/result";
     }
-//
-//    @PutMapping
-//    public Integer updateNote(NoteForm noteForm) {
-//        // TODO update returns the number of rows affected
-//        noteService.updateNote(noteForm);
-//        return null;
-//    }
 
 }

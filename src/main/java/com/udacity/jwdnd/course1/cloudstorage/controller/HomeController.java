@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+import com.udacity.jwdnd.course1.cloudstorage.entity.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.entity.File;
 import com.udacity.jwdnd.course1.cloudstorage.entity.Note;
 import com.udacity.jwdnd.course1.cloudstorage.service.NoteService;
@@ -42,6 +43,11 @@ public class HomeController {
     @ModelAttribute("notes")
     public List<Note> listNotes(Authentication authentication) throws Exception {
         return noteService.getNotes(userService.getUserId(authentication.getName()));
+    }
+
+    @ModelAttribute("credentials")
+    public List<Credential> listCredentails(Authentication authentication) {
+        return null;
     }
 
 }
