@@ -27,15 +27,31 @@ public class NoteController {
         this.userService = userService;
     }
 
+    @PostMapping("/{noteId}")
+    public String updateNote(@PathVariable Integer noteId, NoteForm noteForm, RedirectAttributes redirectAttributes) {
+        System.out.println(noteForm.getNoteId());
+        System.out.println("dlkfjsssssssssssssssssss");
+        noteForm.setNoteId(noteId);
+        System.out.println(noteForm.getNoteId());
+        noteService.updateNote(noteForm);
+        redirectAttributes.addFlashAttribute("successMessage", "Success");
+        return "redirect:/result";
+    }
+
     @PostMapping
-    public String insertNote(NoteForm noteForm, Authentication authentication, Model model, RedirectAttributes redirectAttributes) {
+    public String insertNote(NoteForm noteForm, Authentication authentication, RedirectAttributes redirectAttributes) {
 
-        if(noteService.insertNote(noteForm, userService.getUserId(authentication.getName())) != 0) {
-            model.addAttribute("successMessage");
-        } else {
-            model.addAttribute("errorMessage", "Error has occurred.");
-        }
+        System.out.println(noteForm.getNoteId());
+        System.out.println(noteForm.getNoteTitle());
+        System.out.println(noteForm.getNoteDescription());
 
+            System.out.println("here to post and not update");
+            if(noteService.insertNote(noteForm, userService.getUserId(authentication.getName())) != 0) {
+                redirectAttributes.addFlashAttribute("successMessage", "Success");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Error");
+            }
+//        }
         return "redirect:/result";
     }
 
@@ -49,12 +65,12 @@ public class NoteController {
         }
         return "redirect:/result";
     }
-
-    @PutMapping
-    public Integer updateNote(NoteForm noteForm) {
-        // TODO update returns the number of rows affected
-        noteService.updateNote(noteForm);
-        return null;
-    }
+//
+//    @PutMapping
+//    public Integer updateNote(NoteForm noteForm) {
+//        // TODO update returns the number of rows affected
+//        noteService.updateNote(noteForm);
+//        return null;
+//    }
 
 }

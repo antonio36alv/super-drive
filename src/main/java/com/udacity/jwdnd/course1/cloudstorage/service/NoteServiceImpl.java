@@ -36,9 +36,6 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Integer updateNote(NoteForm noteForm) {
-        System.out.println(noteForm.getNoteId());
-        System.out.println(noteForm.getNoteTitle());
-        System.out.println(noteForm.getNoteDescription());
         return noteMapper.updateNote(noteForm.getNoteId(), noteForm.getNoteTitle(), noteForm.getNoteDescription());
     }
 

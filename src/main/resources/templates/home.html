@@ -61,9 +61,6 @@
                             </table>
                         </div>
                     </div>
-                    <div th:if="${message}">
-                        <h3 th:text="${message}">Message</h3>
-                    </div>
                     <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
                         <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
@@ -82,7 +79,12 @@
                                     <tr th:each="note : ${notes}">
                                         <span th:text="${note.noteId}">otherwise...</span>
                                         <td>
-                                            <button onclick="showNoteModal()" type="button" class="btn btn-success">Edit</button>
+                                            <!-- <button th:onclick="|showNoteModal(${note.noteId}, ${note.noteTitle}, ${note.noteDescription})|" type="button" class="btn btn-success">Edit</button> -->
+                                            <!-- <button th:onclick="showNoteModal({noteId}(noteId = ${note.noteId}), {noteTitle}, {noteDescription})|" type="button" class="btn btn-success">Edit</button> -->
+                                            <!-- <button th:attr="onclick=|showNoteModal(${note.noteId}, ${note.noteTitle}, '${note.noteDescription}')|" type="button" class="btn btn-success">Edit</button> -->
+
+<button th:onclick="javascript: showNoteModal([[${note.noteId}]], [[${note.noteTitle}]], [[${note.noteDescription}]])" type="button" class="btn btn-success">Edit</button>
+<!-- <button th:onclick="${'showNoteModal(note.noteId, ' + note.noteTitle + ', ' + note.noteDescription + ')'}" type="button" class="btn btn-success">Edit</button> -->
                                             <a th:href="@{/note/delete/{noteId}(noteId = ${note.noteId})}" class="btn btn-danger">Delete</a>
                                         </td>
                                         <th scope="row" th:text="${note.noteTitle}">Example Note Title</th>
@@ -102,8 +104,15 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{/note}" method="POST">
-                                            <input th:if="${note}" type="hidden" name="noteId" id="note-id" th:attr="value=${note.noteId}">
+                                        <form action="#" th:action="@{/note}" method="POST" id="note-form">
+                                            <!-- <input th:if="${note}" th:value="${note.noteId}" type="hidden" name="noteId" id="note-id"> -->
+                                            <!-- <input th:if="${note}" th:field="*{note.noteId}" type="hidden" name="noteId" id="note-id"> -->
+                                            <!-- <input th:if="${note}" type="text" th:value="*{note.noteId}" style="display:none;"> -->
+                                            <!-- <input th:if="${note}" id="note-id" name="noteId" type="hidden"> -->
+                                            <!-- <input th:if="${note}" id="note-id" name="noteId" type="hidden"> -->
+                                            <!-- <input th:if="${note}" th:field="*{note.noteId}" id="note-id" name="noteId" type="text" style="display:none;"> -->
+                                            <input th:if="${note}" th:field="*{note.noteId}" id="note-id" name="noteId" type="hidden">
+
                                             <span th:if="${note}" th:text="${note.noteTitle}"></span>
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
@@ -201,6 +210,14 @@
 
             // For opening the note modal
             function showNoteModal(noteId, noteTitle, noteDescription) {
+
+                console.log("get down again!")
+                console.log(noteId)
+                if(noteId) {
+                    const noteForm = document.getElementById("note-form");
+                    noteForm.setAttribute("action", `/note/${noteId}`)
+                    console.log(noteForm.getAttribute("action"))
+                }
                 $('#note-id').val(noteId ? noteId : '');
                 $('#note-title').val(noteTitle ? noteTitle : '');
                 $('#note-description').val(noteDescription ? noteDescription : '');

@@ -56,7 +56,9 @@ public class FileController {
         redirectAttributes.addFlashAttribute("message",
                 String.format("%s", message));
 
-        return "redirect:/home";
+        model.addAttribute("successMessage", "yay");
+
+        return "redirect:/result";
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
