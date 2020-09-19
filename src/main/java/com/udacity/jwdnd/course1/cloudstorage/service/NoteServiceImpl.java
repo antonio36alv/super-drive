@@ -6,7 +6,6 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
 import java.util.List;
 
 @Service
@@ -31,7 +30,6 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Integer deleteNote(Integer noteId) {
-
         return noteMapper.deleteNote(noteId);
     }
 

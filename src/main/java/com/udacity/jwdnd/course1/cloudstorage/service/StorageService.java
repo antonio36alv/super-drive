@@ -13,19 +13,13 @@ import java.util.stream.Stream;
 @Service
 public interface StorageService {
 
-        void init();
-
         List<File> getUserFiles(String userName);
 
         String store(MultipartFile fileUpload, String userName);
 
-        Stream<Path> loadAll();
+//        Resource loadAsResource(String filename);
 
-        Path load(String filename);
-
-        Resource loadAsResource(String filename);
-
-        void deleteAll();
+//        void deleteAll();
 
         Integer deleteFile(Integer fileId);
 

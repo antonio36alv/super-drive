@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-import java.util.List;
-
 @Controller
 @RequestMapping("/files")
 public class FileController {
@@ -61,9 +58,9 @@ public class FileController {
         return "redirect:/result";
     }
 
-    @ExceptionHandler(StorageFileNotFoundException.class)
-    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
-        return ResponseEntity.notFound().build();
-    }
+//    @ExceptionHandler(StorageFileNotFoundException.class)
+//    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
+//        return ResponseEntity.notFound().build();
+//    }
 
 }

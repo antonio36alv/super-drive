@@ -7,6 +7,9 @@ import org.openqa.selenium.support.PageFactory;
 
 public class SignupPage {
 
+    @FindBy(className = "alert")
+    private WebElement signupAlert;
+
     @FindBy(id = "inputFirstName")
     private WebElement firstNameInput;
 
