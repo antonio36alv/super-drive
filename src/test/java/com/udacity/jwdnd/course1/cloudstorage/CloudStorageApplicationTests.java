@@ -33,7 +33,7 @@ class CloudStorageApplicationTests {
 
 	@BeforeAll
 	static void beforeAll() {
-		WebDriverManager.chromedriver().setup();
+		WebDriverManager.firefoxdriver().setup();
 	}
 
 	@BeforeEach
@@ -49,11 +49,6 @@ class CloudStorageApplicationTests {
 			driver.quit();
 		}
 	}
-
-//	@AfterAll
-//	public static void affterAll() {
-//
-//	}
 
 	@Test
 	@Order(1)

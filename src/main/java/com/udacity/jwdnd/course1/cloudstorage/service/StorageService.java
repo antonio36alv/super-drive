@@ -15,11 +15,7 @@ public interface StorageService {
 
         List<File> getUserFiles(String userName);
 
-        String store(MultipartFile fileUpload, String userName);
-
-//        Resource loadAsResource(String filename);
-
-//        void deleteAll();
+        String store(MultipartFile fileUpload, Integer userId);
 
         Integer deleteFile(Integer fileId);
 

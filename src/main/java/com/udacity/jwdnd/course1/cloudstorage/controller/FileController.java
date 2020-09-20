@@ -1,12 +1,11 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.entity.File;
-import com.udacity.jwdnd.course1.cloudstorage.exception.StorageFileNotFoundException;
 import com.udacity.jwdnd.course1.cloudstorage.service.StorageService;
+import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,15 +20,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class FileController {
 
     private final StorageService storageService;
+    private final UserService userService;
 
     @Autowired
-    public FileController(StorageService storageService) {
+    public FileController(StorageService storageService, UserService userService) {
         this.storageService = storageService;
-
+        this.userService = userService;
     }
 
     @GetMapping("/{fileId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable Integer fileId) {
+    public ResponseEntity<Resource> accessFile(@PathVariable Integer fileId) {
         // Load file from database
         File file = storageService.viewFile(fileId);
 
@@ -40,27 +40,26 @@ public class FileController {
     }
 
     @RequestMapping("/delete/{fileId}")
-    public String deleteFile(@PathVariable Integer fileId) {
-        storageService.deleteFile(fileId);
+    public String deleteFile(@PathVariable Integer fileId, RedirectAttributes redirectAttributes) {
+        if(storageService.deleteFile(fileId) != 0){
+            redirectAttributes.addFlashAttribute("successMessage", "success");
+        } else{
+            redirectAttributes.addFlashAttribute("errorMessage", "error");
+        }
         return "redirect:/home";
     }
 
     @PostMapping
     public String saveFile(@RequestParam("fileUpload") MultipartFile fileUpload, Model model,
                            RedirectAttributes redirectAttributes, Authentication authentication) {
-    // TODO model can probably be removed from parameters
-        String message = storageService.store(fileUpload, authentication.getName());
-        redirectAttributes.addFlashAttribute("message",
-                String.format("%s", message));
-
-        model.addAttribute("successMessage", "yay");
-
-        return "redirect:/result";
+        String message = storageService.store(fileUpload, userService.getUserId(authentication.getName()));
+        if(message.contains("You successfully uploaded ")) {
+            redirectAttributes.addFlashAttribute("successMessage", "success");
+            return "redirect:/result";
+        } else {
+            redirectAttributes.addFlashAttribute("alertMessage", message);
+            return "redirect:/home";
+        }
     }
-
-//    @ExceptionHandler(StorageFileNotFoundException.class)
-//    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
-//        return ResponseEntity.notFound().build();
-//    }
 
 }
