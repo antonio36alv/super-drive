@@ -14,8 +14,7 @@ public class ResultPage {
         PageFactory.initElements(webDriver, this);
     }
 
-    public void clickHomeAnchor() throws InterruptedException {
-        Thread.sleep(3000);
+    public void clickHomeAnchor() {
         this.homeAnchor.click();
     }
 

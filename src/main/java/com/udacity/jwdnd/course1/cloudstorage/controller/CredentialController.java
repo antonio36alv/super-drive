@@ -54,8 +54,12 @@ public class CredentialController {
     }
 
     @RequestMapping("/delete/{credentialId}")
-    public String deleteCredential(@PathVariable Integer credentialId) {
-        credentialService.deleteCredential(credentialId);
+    public String deleteCredential(@PathVariable Integer credentialId, RedirectAttributes redirectAttributes) {
+        if(credentialService.deleteCredential(credentialId) != 0) {
+            redirectAttributes.addFlashAttribute("successMessage", "success");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "error");
+        }
         return "redirect:/result";
     }
 
