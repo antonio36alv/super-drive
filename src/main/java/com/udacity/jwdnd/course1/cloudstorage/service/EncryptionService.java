@@ -2,33 +2,26 @@ package com.udacity.jwdnd.course1.cloudstorage.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Base64;
 
 @Service
 public class EncryptionService {
     private Logger logger = LoggerFactory.getLogger(EncryptionService.class);
 
-//    private static SecretKeySpec secretKey;
-//    private static byte[] key;
-//    private static final String ALGO = "AES";
-//    private String myKey = "eycrEoEU6r";
-
+    // https://www.javaguides.net/2020/02/java-string-encryption-decryption-example.html
     public String prepareSecreteKey() {
         MessageDigest sha = null;
         try {
             SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
+            // https://stackoverflow.com/questions/5355466/converting-secret-key-into-a-string-and-vice-versa
             return Base64.getEncoder().encodeToString(secretKey.getEncoded());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

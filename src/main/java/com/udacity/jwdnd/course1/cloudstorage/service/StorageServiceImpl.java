@@ -27,7 +27,6 @@ public class StorageServiceImpl implements StorageService {
 
     @Autowired
     public StorageServiceImpl(FileMapper fileMapper, UserService userService, UserMapper userMapper) {
-//        this.rootLocation = Paths.get(properties.getLocation());
         this.fileMapper = fileMapper;
         this.userService = userService;
         this.userMapper= userMapper;
