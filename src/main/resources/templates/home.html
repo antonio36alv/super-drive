@@ -82,7 +82,7 @@
                                     <tr th:each="note : ${notes}">
                                         <span th:text="${note.noteId}">otherwise...</span>
                                         <td>
-
+                                            <!-- https://stackoverflow.com/questions/46667586/thymeleaf-javascript-parser-breaks-on-double-square-brackets -->
                                             <button th:onclick="javascript: showNoteModal([[${note.noteId}]], 
                                             [[${note.noteTitle}]], [[${note.noteDescription}]])" type="button" 
                                             class="edit-note-btn btn btn-success">Edit</button>
@@ -156,6 +156,7 @@
                                     <th class="credential-url-th" th:text="${credential.url}" scope="row">Example Credential URL</th>
                                     <td class="credential-password-enc-td" style="display: none;" th:text="${credential.password}"></td>
                                     <td class="credential-username-td" th:text="${credential.username}">Example Credential Username</td>
+                                    <!-- https://stackoverflow.com/questions/28067861/how-to-call-objects-method-from-thymeleaf -->
                                     <td class="credential-password-visible-td" th:text="${encryptionService.decryptValue(credential.password, credential.key)}">Example Credential Password</td>
                                 </tr>
                                 </tbody>
