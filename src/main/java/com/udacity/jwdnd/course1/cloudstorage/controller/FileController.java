@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.entity.File;
 import com.udacity.jwdnd.course1.cloudstorage.service.StorageService;
 import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -12,8 +13,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.naming.SizeLimitExceededException;
 
 @Controller
 @RequestMapping("/files")
@@ -54,13 +58,18 @@ public class FileController {
     @PostMapping
     public String saveFile(@RequestParam("fileUpload") MultipartFile fileUpload, Model model,
                            RedirectAttributes redirectAttributes, Authentication authentication) {
-        String message = storageService.store(fileUpload, userService.getUserId(authentication.getName()));
+        try {
+            String message = storageService.store(fileUpload, userService.getUserId(authentication.getName()));
         if(message.contains("You successfully uploaded ")) {
             redirectAttributes.addFlashAttribute("successMessage", "success");
             return "redirect:/result";
         } else {
             redirectAttributes.addFlashAttribute("alertMessage", message);
             return "redirect:/home";
+        }
+        } catch(MultipartException e) {
+            System.out.println("no bueno");
+            return null;
         }
     }
 

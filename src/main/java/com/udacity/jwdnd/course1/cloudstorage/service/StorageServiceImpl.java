@@ -47,6 +47,9 @@ public class StorageServiceImpl implements StorageService {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {
+                if(file.getOriginalFilename().equals("")) {
+                    return "Failed to store empty file.";
+                }
                 return String.format("Failed to store empty file %s.", filename);
             }
             if (filename.contains("..")) {

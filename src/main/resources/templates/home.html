@@ -80,7 +80,7 @@
                                 </thead>
                                 <tbody>
                                     <tr th:each="note : ${notes}">
-                                        <span th:text="${note.noteId}">otherwise...</span>
+                                        <!-- <span th:text="${note.noteId}">otherwise...</span> -->
                                         <td>
                                             <!-- https://stackoverflow.com/questions/46667586/thymeleaf-javascript-parser-breaks-on-double-square-brackets -->
                                             <button th:onclick="javascript: showNoteModal([[${note.noteId}]], 
@@ -210,6 +210,7 @@
 
             // For opening the note modal
             function showNoteModal(noteId, noteTitle, noteDescription) {
+                    console.log(noteTitle)
 
                 if(noteId) {
                     const noteForm = document.getElementById("note-form");
@@ -217,7 +218,7 @@
                 }
 
                 $('#note-id').val(noteId ? noteId : '');
-                $('#note-title').val(noteTitle ? noteTitle : '');
+                $('#note-title-input').val(noteTitle ? noteTitle : '');
                 $('#note-description').val(noteDescription ? noteDescription : '');
                 $('#noteModal').modal('show');
             }
