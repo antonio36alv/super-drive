@@ -174,12 +174,12 @@ class CloudStorageApplicationTests {
 		resultPage.clickHomeAnchor();
 		// need to check to see that it was posted
 		Credential insertedCredential = homePage.getFirstCredential();
-		System.out.println(homePage.getPasswordEnc());
 		// make sure password was encrypted in the case that decrypt wasn't called
         Assertions.assertNotEquals(insertedCredential.getPassword(), homePage.getPasswordEnc());
         Assertions.assertEquals(url, insertedCredential.getUrl());
 		Assertions.assertEquals(username, insertedCredential.getUsername());
-		Assertions.assertEquals(password, insertedCredential.getPassword());
+		Assertions.assertNotEquals(password, insertedCredential.getPassword());
+		Assertions.assertEquals(password, homePage.getPasswordDecrypted());
 
 		homePage.addCredential(true, newUrl, newUsername, newPassword);
 		resultPage.clickHomeAnchor();
@@ -188,7 +188,8 @@ class CloudStorageApplicationTests {
 		Assertions.assertNotEquals(updatedCredential.getPassword(), homePage.getPasswordEnc());
 		Assertions.assertEquals(newUrl, updatedCredential.getUrl());
 		Assertions.assertEquals(newUsername, updatedCredential.getUsername());
-		Assertions.assertEquals(newPassword, updatedCredential.getPassword());
+		Assertions.assertNotEquals(newPassword, updatedCredential.getPassword());
+		Assertions.assertEquals(newPassword, homePage.getPasswordDecrypted());
 
 		homePage.deleteCredential();
 		resultPage.clickHomeAnchor();

@@ -60,6 +60,9 @@ public class HomePage {
     @FindBy(className = "edit-credential-btn")
     private WebElement editCredentailBtn;
 
+    @FindBy(id = "close-credential-btn")
+    private WebElement closeCredentialBtn;
+
     @FindBy(className = "delete-credential-btn")
     private WebElement deleteCredentialBtn;
 
@@ -107,8 +110,8 @@ public class HomePage {
     }
 
     public void addCredential(boolean edit, String url, String username, String password) {
-        this.credentialsTab.click();
         if (!edit) {
+            this.credentialsTab.click();
             this.newCredentialBtn.click();
         } else {
             this.editCredentailBtn.click();
@@ -134,5 +137,18 @@ public class HomePage {
 
     public void deleteCredential() {
         this.deleteCredentialBtn.click();
+    }
+
+    public String getPasswordDecrypted() {
+        this.editCredentailBtn.click();
+        String decryptedPassword = this.credentialPasswordInput.getAttribute("value");
+        this.closeCredentialBtn.click();
+        this.closeCredentialBtn.click();
+        try {
+            Thread.sleep(3000);
+        } catch(InterruptedException e) {
+            System.out.println("fuck");
+        }
+        return decryptedPassword;
     }
 }
