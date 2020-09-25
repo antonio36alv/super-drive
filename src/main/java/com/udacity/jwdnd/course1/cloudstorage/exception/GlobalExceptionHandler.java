@@ -14,7 +14,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MultipartException.class)
     public String sizeUploadHandler(MultipartException e, RedirectAttributes redirectAttributes) {
 
-
         redirectAttributes.addFlashAttribute("alertMessage", "Error: File size is too large. Max size allowed is 128KB.");
         return "redirect:/home";
     }
