@@ -10,6 +10,7 @@ public class LoginController {
 
     @GetMapping
     public String getLoginPage() {
+        System.out.println(System.getenv("JDBC_DATABASE_URL"));
         return "login";
     }
 }
