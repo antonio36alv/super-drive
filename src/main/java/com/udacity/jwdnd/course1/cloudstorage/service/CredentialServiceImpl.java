@@ -34,11 +34,11 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public Integer insertCredential(CredentialForm credentialForm, Integer userId) throws Exception {
 
-        String key = encryptionService.prepareSecreteKey();
+        String ekey = encryptionService.prepareSecreteKey();
 
         Credential credential = new Credential(null, credentialForm.getUrl(),
-                                                credentialForm.getUsername(), key,
-                                                encryptionService.encryptValue(credentialForm.getPassword(), key),
+                                                credentialForm.getUsername(), ekey,
+                                                encryptionService.encryptValue(credentialForm.getPassword(), ekey),
                                                 userId);
         return credentialMapper.insertCredential(credential);
     }
@@ -46,11 +46,11 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public Integer updateCredential(CredentialForm credentialForm) {
 
-        String key = encryptionService.prepareSecreteKey();
+        String ekey = encryptionService.prepareSecreteKey();
 
         return credentialMapper.updateCredential(credentialForm.getCredentialId(), credentialForm.getUrl(),
-                                                credentialForm.getUsername(), key,
-                                                encryptionService.encryptValue(credentialForm.getPassword(), key));
+                                                credentialForm.getUsername(), ekey,
+                                                encryptionService.encryptValue(credentialForm.getPassword(), ekey));
     }
 
     @Override
