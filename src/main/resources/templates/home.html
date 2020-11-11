@@ -135,34 +135,37 @@
                         </button>
 
                         <div class="table-responsive">
-                            <table class="table table-striped" th:object="${credentials}" id="credentialTable">
+                            <table style="text-align: center;" class="table table-striped" th:object="${credentials}" id="credentialTable">
                                 <thead>
                                     <tr>
-                                        <th style="width: 15%" scope="col"></th>
-                                        <th style="width: 25%" scope="col">URL</th>
+                                        <th style="width: 7.5%" scope="col"></th>
+                                        <th style="width: 7.5%" scope="col"></th>
+                                        <th style="width: 20%" scope="col">URL</th>
                                         <th style="width: 20%" scope="col">Username</th>
                                         <th style="width: 20%" scope="col">Password</th>
-                                        <th style="width: 7%" scope="col">Copy</th>
+                                        <th style="width: 18%" scope="col">Copy</th>
                                         <th style="width: 7%" scope="col">Show</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="credential : ${credentials}">
                                     <td>
-                                        <button class="edit-credential-btn btn btn-success" th:onclick="javascript: showCredentialModal([[${credential.credentialId}]],
+                                        <button class="edit-credential-btn btn btn-success fa fa-edit" th:onclick="javascript: showCredentialModal([[${credential.credentialId}]],
                                         [[${credential.url}]], [[${credential.username}]], 
                                         [[${encryptionService.decryptValue(credential.password, credential.ekey)}]])" 
-                                        type="button">Edit</button>
-                                        <a class="delete-credential-btn btn btn-danger" th:href="@{/credential/delete/{credentialId}(credentialId = ${credential.credentialId})}">Delete</a>
-                                        <!-- <a class="btn btn-danger">Delete</a> -->
+                                        type="button"></button>
                                     </td>
+                                    <td>
+                                        <a class="delete-credential-btn btn btn-danger fa fa-trash" th:href="@{/credential/delete/{credentialId}(credentialId = ${credential.credentialId})}"></a>
+                                    </td>
+                                        <!-- <a class="btn btn-danger">Delete</a> -->
                                     <th class="credential-url-th" th:text="${credential.url}" scope="row">Example Credential URL</th>
                                     <td type="hidden" class="credential-password-enc-td" style="display: none;" th:value="${credential.password}"></td>
                                     <td class="credential-username-td" th:text="${credential.username}">Example Credential Username</td>
                                     <!-- https://stackoverflow.com/questions/28067861/how-to-call-objects-method-from-thymeleaf -->
                                     <td><input class="password-view" th:id="'user-password-' + ${credential.credentialId}" style="all:unset" type="password" readonly="" 
                                                 th:value="${encryptionService.decryptValue(credential.password, credential.ekey)}"></input></td>
-                                    <td><button class="btn fa fa-copy" style="background-color: transparent;"></button></td>
+                                    <td><button class="btn fa fa-copy copy-password-btn" th:id="'copy-password-btn-' + ${credential.credentialId}" style="background-color: transparent;"></button></td>
                                     <td><button class="btn fa fa-eye show-password-btn" th:id="'show-password-btn-' + ${credential.credentialId}" style="background-color: transparent;"></button></td> 
                                 </tr>
                                 </tbody>
