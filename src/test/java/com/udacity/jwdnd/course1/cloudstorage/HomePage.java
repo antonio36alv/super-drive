@@ -92,8 +92,8 @@ public class HomePage {
     }
 
     public void addNote(boolean edit, String noteTitle, String noteDescription) {
-        this.noteTab.click();
         if (!edit) {
+            this.noteTab.click();
             this.newNoteBtn.click();
         } else {
             this.editNoteBtn.click();
@@ -110,7 +110,6 @@ public class HomePage {
     }
 
     public Note getFirstNote() {
-        this.noteTab.click();
         return new Note(null, noteTitleTh.getText(), noteDescriptionTd.getText(), null);
     }
 
@@ -135,7 +134,6 @@ public class HomePage {
     }
 
     public Credential getFirstCredential() {
-        this.credentialsTab.click();
         return new Credential(null, credentialUrl.getText(), credentialUsername.getText(),
                                 null, passwordView.getText(), null);
     }
