@@ -75,8 +75,13 @@ public class HomePage {
     @FindBy(className = "credential-username-td")
     private WebElement credentialUsername;
 
-    @FindBy(className = "credential-password-visible-td")
-    private WebElement credentialPasswordVisible;
+    @FindBy(className = "password-view")
+    private WebElement passwordView;
+
+    @FindBy(className = "show-password-btn")
+    private WebElement showPasswordBtn;
+
+//    @FindBy(className = "")
 
     public HomePage(WebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
@@ -126,13 +131,13 @@ public class HomePage {
     }
 
     public String getPasswordEnc() {
-        return credentialPasswordEncryp.getText();
+        return credentialPasswordEncryp.getAttribute("value");
     }
 
     public Credential getFirstCredential() {
         this.credentialsTab.click();
         return new Credential(null, credentialUrl.getText(), credentialUsername.getText(),
-                                null, credentialPasswordVisible.getText(), null);
+                                null, passwordView.getText(), null);
     }
 
     public void deleteCredential() {
@@ -150,5 +155,9 @@ public class HomePage {
             System.out.println("fuck");
         }
         return decryptedPassword;
+    }
+
+    public void clickShowPassword() {
+        this.showPasswordBtn.click();
     }
 }

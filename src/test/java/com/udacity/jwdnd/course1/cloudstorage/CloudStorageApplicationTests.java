@@ -3,11 +3,9 @@ package com.udacity.jwdnd.course1.cloudstorage;
 import com.udacity.jwdnd.course1.cloudstorage.entity.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.entity.Note;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.juli.logging.Log;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -172,19 +170,40 @@ class CloudStorageApplicationTests {
 //        driver.get(baseUrl + "/result");
 		ResultPage resultPage = new ResultPage(driver);
 		resultPage.clickHomeAnchor();
-		// need to check to see that it was posted
-		Credential insertedCredential = homePage.getFirstCredential();
-		// make sure password was encrypted in the case that decrypt wasn't called
-        Assertions.assertNotEquals(insertedCredential.getPassword(), homePage.getPasswordEnc());
-        Assertions.assertEquals(url, insertedCredential.getUrl());
-		Assertions.assertEquals(username, insertedCredential.getUsername());
-		Assertions.assertNotEquals(password, insertedCredential.getPassword());
-		Assertions.assertEquals(password, homePage.getPasswordDecrypted());
+
+		// After returning to home page, click credential tab
+		// and grab text from first credential
+		Credential firstCredential = homePage.getFirstCredential();
+
+		// check that hidden td's password is encrypted
+        Assertions.assertNotEquals(password, homePage.getPasswordEnc());
+        // check that url and username both match what was entered
+        Assertions.assertEquals(url, firstCredential.getUrl());
+		Assertions.assertEquals(username, firstCredential.getUsername());
+
+		// check that entered password and retrieved (what should be dots) don't match
+		Assertions.assertNotEquals(password, firstCredential.getPassword());
+
+		// after clicking show button retrieve credentials again
+		homePage.clickShowPassword();
+		Credential credPasswordRevealed = homePage.getFirstCredential();
+		// password that is now showing on page should match entered
+		Assertions.assertNotEquals(password, firstCredential.getPassword());
+
+		// clicking show password again will hide it
+		// check that it is hidden
+		homePage.clickShowPassword();
+		Credential hiddenCredential = homePage.getFirstCredential();
+		Assertions.assertNotEquals(password, hiddenCredential.getPassword());
 
 		homePage.addCredential(true, newUrl, newUsername, newPassword);
 		resultPage.clickHomeAnchor();
 
 		Credential updatedCredential = homePage.getFirstCredential();
+		// check to see that hidden password's text does not match entered password
+		Assertions.assertNotEquals(password, homePage.getPasswordEnc());
+		System.out.println("you'll never change your way");
+		System.out.println(homePage.getPasswordEnc());
 		Assertions.assertNotEquals(updatedCredential.getPassword(), homePage.getPasswordEnc());
 		Assertions.assertEquals(newUrl, updatedCredential.getUrl());
 		Assertions.assertEquals(newUsername, updatedCredential.getUsername());
