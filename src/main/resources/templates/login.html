@@ -5,12 +5,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vivus/0.4.5/vivus.min.js" integrity="sha512-NBLGIjYyAoYAr23l+dmAcUv7TvFj0XrqZoFa4i1o+F2VvF9SrERyMD8BHNnJn1SEGjl1AouBDcCv/q52L3ozBQ==" crossorigin="anonymous"></script>
 
         <title>Login</title>
     </head>
     <body class="p-3 mb-2 bg-light text-black">
-        <div class="container justify-content-center w-25 p-3" style="background-color: #eeeeee; margin-top: 5em;">
-            <h1 class="display-5">Login</h1>
+    <!-- const myVivus = new Vivus("my-svg-div", {duration: 200, file: "../images/file-cabinet.svg"}, paint); -->
+        <div class="col-xs-12 col-md-8 col-lg-3 mt-5 d-flex flex-column flex-md-row mx-auto justify-content-center">
+            <h1 class="mx-auto col-sm-9 text-center mb-auto mt-auto">Super Drive</h1>
+            <div class="mx-auto col-sm-3 p-0" style="max-height:145px;max-width:145px">
+                <object id="my-svg-div" type="impage/svg+xml" data="../static/images/file-cabinet.svg"></object>
+            </div>
+        </div>
+        <div class="container justify-content-center w-25 p-3 mt-4" style="background-color: #eeeeee;">
+            <h2 class="display-5">Login</h2>
             <form action="#" th:action="@{/login}" method="POST">
                 <div th:if="${signupSuccess}" class="alert alert-dark">
                     Succesful signup, you may now login.
@@ -36,5 +44,6 @@
                 <label><a href="/signup">Click here to sign up</a></label>
             </div>
         </div>
+    <script th:src="@{/js/svg-draw.js}"></script>
     </body>
 </html>
