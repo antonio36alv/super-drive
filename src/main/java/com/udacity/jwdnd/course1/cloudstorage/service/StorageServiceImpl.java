@@ -19,7 +19,6 @@ import java.util.List;
 @Service
 public class StorageServiceImpl implements StorageService {
 
-//    private final Path rootLocation;
     private FileMapper fileMapper;
     private UserMapper userMapper;
     private final UserService userService;

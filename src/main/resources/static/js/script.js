@@ -59,7 +59,6 @@ function showPassword(e) {
         clickedShowPasswordBtn.setAttribute("class", originalClassesShowBtn);
     }
 }
-
 /*        
     gets value from password input and copies it to user's clipboard
 */

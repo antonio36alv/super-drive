@@ -32,7 +32,7 @@ public class FileController {
         this.userService = userService;
     }
 
-    // Used spring boot docs for refrence
+    // Used spring boot docs for reference
     // https://spring.io/guides/gs/uploading-files/
     @GetMapping("/{fileId}")
     public ResponseEntity<Resource> accessFile(@PathVariable Integer fileId) {
