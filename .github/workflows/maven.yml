@@ -20,8 +20,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Set up selenium firefox
+      container:
+        image: selenium/standalone-firefox:latest
     - name: Build with Maven
-      uses:
-        container:
-          image: selenium/standalone-firefox:latest
       run: mvn -B package --file pom.xml -X
