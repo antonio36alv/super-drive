@@ -9,6 +9,7 @@
 [My GitHub](https://github.com/antonio36alv)
 
 <!-- add main screenshot here -->
+![Login Screenshot](./images/login-screenshot.png)
 
 <!-- add video demo here -->
 
