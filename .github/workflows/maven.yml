@@ -22,3 +22,43 @@ jobs:
     - name: Build with Maven
 #      run: mvn -B package --file pom.xml -X
       run: mvn -B clean package -Dtest=GithubActionsTests --file pom.xml
+  integration:
+    needs: build
+    runs-on: ubuntu-latest
+    # parse github ref in order to get branch name
+    # docs for reference
+    # setting outputs
+    # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter
+    steps:
+    - name: extract branch name
+      shell: bash
+      run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
+      id: extract_branch
+    - name: check output for extract branch name
+      run: |
+        echo ${{ steps.extract_branch.outputs.branch }}
+        echo ${{ github.repository }}
+    # creates pull request, requires personal access token
+    # to be stored within secrets
+    # docs for reference
+    # https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request
+    - name: create pull request via github api
+      id: create_pr_step
+      run: |
+        echo "::set-output name=response::$(curl -u ${{ github.actor }}:${{ secrets.PAT }} -X POST \
+        -H "Accept: application/vnd.github.v3+json" \
+        https://api.github.com/repos/${{ github.repository }}/pulls \
+        -d '{"title":"${{ github.event.head_commit.message }}", "head":"${{ steps.extract_branch.outputs.branch }}", "base":"master"}' | json_pp -json_opt relaxed )"
+    # where I found out about fromJson
+    # https://stackoverflow.com/questions/61919141/read-json-file-in-github-actionshttps://stackoverflow.com/questions/61919141/read-json-file-in-github-actions
+    # found this from github after the fact
+    # https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/
+    - name: merge pull request via github api
+      run: |
+        curl -u ${{ github.actor }}:${{ secrets.PAT }} -X PUT \
+        -H "Accept: application/vnd.github.v3+json" \
+        https://api.github.com/repos/${{ github.repository }}/pulls/${{ fromJson(steps.create_pr_step.outputs.response).number }}/merge
+    - name: check response output
+      run: |
+        echo ${{ fromJson(steps.create_pr_step.outputs.response).number }}
+        echo ${{ github.event.head_commit.message }}
