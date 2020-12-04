@@ -93,6 +93,25 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.15.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!--   https://search.maven.org/artifact/org.testcontainers/selenium/1.15.0/jar   -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>selenium</artifactId>
+            <version>1.15.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>1.15.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
