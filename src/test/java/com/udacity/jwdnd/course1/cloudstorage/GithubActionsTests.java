@@ -2,68 +2,111 @@ package com.udacity.jwdnd.course1.cloudstorage;
 
 import com.udacity.jwdnd.course1.cloudstorage.entity.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.entity.Note;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
-import java.util.concurrent.TimeUnit;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.testcontainers.containers.BrowserWebDriverContainer;
+import org.testcontainers.containers.Network;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.net.*;
+import java.sql.SQLException;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class CloudStorageApplicationTests {
+@Testcontainers
+class GithubActionsTests {
 
 	@LocalServerPort
-	private int port;
+	public int port;
 
-	private static WebDriver driver;
+	@Autowired
+	private ApplicationContext context;
 
-	private String baseUrl;
-	// user credentials to be used
+    @Container
+	public static BrowserWebDriverContainer firefox =
+			(BrowserWebDriverContainer) new BrowserWebDriverContainer()
+					.withCapabilities(new FirefoxOptions().addArguments("--headless",
+																		"--disable-gpu",
+																		"--window-size=1920,1200",
+																		"--ignore-certificate-errors"))
+					.withNetwork(Network.SHARED);
+
+	public static RemoteWebDriver driver;
+
+	public String baseUrl;
+	public static String ip = "";
+
 	private String firstName = "Matt";
 	private String lastName = "Murdock";
 	private String username = "avocodosAtLaw";
 	private String password = "hellskitchen";
 
 	@BeforeAll
-	static void beforeAll() {
-		WebDriverManager.firefoxdriver().setup();
+	public static void beforeAll() {
+		// init our remote web driver
+		// in order to find host ip address where our app server is running
+		// https://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+		try(final DatagramSocket socket = new DatagramSocket()){
+			socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+			ip = socket.getLocalAddress().getHostAddress();
+		} catch (UnknownHostException | SocketException e) {
+			e.printStackTrace();
+		}
+		// can't be used with testcontainers/can't figure out how to use it
+		// however everything runs fine without it
+//		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	}
+
+	@AfterAll
+	public static void afterAll() {
+		driver.quit();
+		driver = null;
 	}
 
 	@BeforeEach
-	public void beforeEach() {
-		this.driver = new FirefoxDriver();
-		baseUrl = baseUrl = "http://localhost:" + port;
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	public void beforeEach() throws SQLException {
+		baseUrl = String.format("http://%s:%d", ip, port);
+		org.testcontainers.Testcontainers.exposeHostPorts(port);
+		firefox.addExposedPort(port);
+		driver = firefox.getWebDriver();
 	}
 
-	@AfterEach
-	public void afterEach() {
-		if (this.driver != null) {
-			driver.quit();
-		}
-	}
+	// can't be used with testcontainers/can't figure out how to use it
+	// however everything runs fine without it
+//	@AfterEach
+//	public void afterEach() {
+//		if (this.driver != null) {
+//			System.out.println("done did it");
+//			driver.quit();
+//		}
+//	}
 
 	@Test
 	@Order(1)
 	public void getLoginPage() {
-		driver.get("http://localhost:" + this.port + "/login");
+		driver.get(baseUrl + "/login");
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
 	@Test
 	@Order(2)
 	public void checkUnauthorizedAccessTest() {
-        String loginUrl = baseUrl + "/login";
+		String loginUrl = baseUrl + "/login";
 		// driver gets home page
 		driver.get(baseUrl + "/home");
 		// ensure it redirects to login page
 		Assertions.assertEquals(loginUrl, driver.getCurrentUrl());
-        // driver get result page
+		// driver get result page
 		driver.get(baseUrl + "/result");
 		// ensure it redirects to login page
 		Assertions.assertEquals(loginUrl, driver.getCurrentUrl());
@@ -71,27 +114,27 @@ class CloudStorageApplicationTests {
 
 	@Test
 	@Order(3)
-	public void SignUpTest() throws InterruptedException {
+	public void SignUpTest() {
 		String loginUrl = baseUrl + "/login";
 		String homeUrl = baseUrl + "/home";
 
-        driver.get(baseUrl + "/signup");
+		driver.get(baseUrl + "/signup");
 
-        SignupPage signupPage = new SignupPage(driver);
-        signupPage.signup(firstName, lastName, username, password);
+		SignupPage signupPage = new SignupPage(driver);
+		signupPage.signup(firstName, lastName, username, password);
 
-        driver.get(baseUrl + "/login");
+		driver.get(baseUrl + "/login");
 
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.login(username, password);
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.login(username, password);
 
 		// check to see that home page is current page after login
-        Assertions.assertEquals(homeUrl, driver.getCurrentUrl());
+		Assertions.assertEquals(homeUrl, driver.getCurrentUrl());
 
-        HomePage homePage = new HomePage(driver);
+		HomePage homePage = new HomePage(driver);
 		// logout
 		homePage.logout();
-        // ensure the website redirected to login page after logout
+		// ensure the website redirected to login page after logout
 		Assertions.assertEquals(loginUrl, driver.getCurrentUrl());
 	}
 
@@ -125,7 +168,6 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals(noteTitle, insertedNote.getNoteTitle());
 		Assertions.assertEquals(noteDescription, insertedNote.getNoteDescription());
 		// edit the note
-		System.out.println(driver.getCurrentUrl());
 		homePage.addNote(true, newTitle, newDescription);
 		// click link back to home
 		resultPage.clickHomeAnchor();
@@ -139,6 +181,7 @@ class CloudStorageApplicationTests {
 		resultPage.clickHomeAnchor();
 		// check to see if the note was deleted
 		Assertions.assertThrows(NoSuchElementException.class, () -> homePage.getFirstNote());
+		homePage.logout();
 	}
 
 	@Test
@@ -157,17 +200,18 @@ class CloudStorageApplicationTests {
 		SignupPage signupPage = new SignupPage(driver);
 		signupPage.signup(firstName, lastName, username, password);
 		// get login page, init login page, login
-	    driver.get(baseUrl + "/login");
+		driver.get(baseUrl + "/login");
 		LoginPage loginPage = new LoginPage(driver);
 		loginPage.login(username, password);
 
 		driver.get(baseUrl + "/home");
-        // init home page, insert new credentials
+		// init home page, insert new credentials
 		HomePage homePage = new HomePage(driver);
-//		System.out.println(driver.getCurrentUrl());
 		homePage.addCredential(false, url, username, password);
 		// init result page and click link back to home page
-//        driver.get(baseUrl + "/result");
+        // driver is automatically taken to result page after adding
+		// credentials, etc. so no need to use driver.get(result)
+		// just feed driver into the result page
 		ResultPage resultPage = new ResultPage(driver);
 		resultPage.clickHomeAnchor();
 
@@ -176,9 +220,9 @@ class CloudStorageApplicationTests {
 		Credential firstCredential = homePage.getFirstCredential();
 
 		// check that hidden td's password is encrypted
-        Assertions.assertNotEquals(password, homePage.getPasswordEnc());
-        // check that url and username both match what was entered
-        Assertions.assertEquals(url, firstCredential.getUrl());
+		Assertions.assertNotEquals(password, homePage.getPasswordEnc());
+		// check that url and username both match what was entered
+		Assertions.assertEquals(url, firstCredential.getUrl());
 		Assertions.assertEquals(username, firstCredential.getUsername());
 
 		// check that entered password and retrieved (what should be dots) don't match
@@ -202,8 +246,6 @@ class CloudStorageApplicationTests {
 		Credential updatedCredential = homePage.getFirstCredential();
 		// check to see that hidden password's text does not match entered password
 		Assertions.assertNotEquals(password, homePage.getPasswordEnc());
-		System.out.println("you'll never change your way");
-		System.out.println(homePage.getPasswordEnc());
 		Assertions.assertNotEquals(updatedCredential.getPassword(), homePage.getPasswordEnc());
 		Assertions.assertEquals(newUrl, updatedCredential.getUrl());
 		Assertions.assertEquals(newUsername, updatedCredential.getUsername());
@@ -213,7 +255,8 @@ class CloudStorageApplicationTests {
 		homePage.deleteCredential();
 		resultPage.clickHomeAnchor();
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> homePage.getFirstCredential());
+		Assertions.assertThrows(NoSuchElementException.class, () -> homePage.getFirstCredential());
+		homePage.logout();
 	}
 
 }
