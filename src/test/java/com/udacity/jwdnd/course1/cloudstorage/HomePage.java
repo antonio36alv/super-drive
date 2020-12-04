@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.entity.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.entity.Note;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -82,8 +83,11 @@ public class HomePage {
     private WebElement showPasswordBtn;
 
 //    @FindBy(className = "")
-
     public HomePage(WebDriver webDriver) {
+        PageFactory.initElements(webDriver, this);
+    }
+
+    public HomePage(RemoteWebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
     }
 

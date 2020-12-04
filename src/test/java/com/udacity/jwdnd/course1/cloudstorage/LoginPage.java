@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -17,6 +18,10 @@ public class LoginPage {
     private WebElement submitBtn;
 
     public LoginPage(WebDriver webDriver) {
+        PageFactory.initElements(webDriver, this);
+    }
+
+    public LoginPage(RemoteWebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
     }
 

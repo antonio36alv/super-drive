@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -11,6 +12,10 @@ public class ResultPage {
     private WebElement homeAnchor;
 
     public ResultPage(WebDriver webDriver) {
+        PageFactory.initElements(webDriver, this);
+    }
+
+    public ResultPage(RemoteWebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
     }
 
