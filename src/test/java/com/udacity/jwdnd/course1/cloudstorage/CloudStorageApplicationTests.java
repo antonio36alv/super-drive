@@ -125,7 +125,6 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals(noteTitle, insertedNote.getNoteTitle());
 		Assertions.assertEquals(noteDescription, insertedNote.getNoteDescription());
 		// edit the note
-		System.out.println(driver.getCurrentUrl());
 		homePage.addNote(true, newTitle, newDescription);
 		// click link back to home
 		resultPage.clickHomeAnchor();
@@ -164,10 +163,11 @@ class CloudStorageApplicationTests {
 		driver.get(baseUrl + "/home");
         // init home page, insert new credentials
 		HomePage homePage = new HomePage(driver);
-//		System.out.println(driver.getCurrentUrl());
 		homePage.addCredential(false, url, username, password);
 		// init result page and click link back to home page
-//        driver.get(baseUrl + "/result");
+		// driver is automatically taken to result page after adding
+		// credentials, etc. so no need to use driver.get(result)
+		// just feed driver into the result page
 		ResultPage resultPage = new ResultPage(driver);
 		resultPage.clickHomeAnchor();
 
@@ -202,8 +202,6 @@ class CloudStorageApplicationTests {
 		Credential updatedCredential = homePage.getFirstCredential();
 		// check to see that hidden password's text does not match entered password
 		Assertions.assertNotEquals(password, homePage.getPasswordEnc());
-		System.out.println("you'll never change your way");
-		System.out.println(homePage.getPasswordEnc());
 		Assertions.assertNotEquals(updatedCredential.getPassword(), homePage.getPasswordEnc());
 		Assertions.assertEquals(newUrl, updatedCredential.getUrl());
 		Assertions.assertEquals(newUsername, updatedCredential.getUsername());
