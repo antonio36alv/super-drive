@@ -42,6 +42,12 @@ To run tests you will also need:
 
 - Firefox
 
+Or if you have docker you can run the GithubActionsTests.java test class. This test class uses Testcontainers, which is a testing library for java. In this case
+
+Testcontainers initilizes a Docker container that runs Selenium Web Driver and Firefox. More about Testcontainers [here](https://www.testcontainers.org/). To run
+
+the GithubActionsTests.java test class through maven cli run ```mvn clean test -Dtest=GithubActionsTests```.
+ 
 
 ### Features
 
@@ -59,8 +65,37 @@ To run tests you will also need:
 
 - User Authentication - passwords are hashed and salted
 
+- Testcontainers - [info](https://www.testcontainers.org/)
+
+- Github Actions Workflow
+
 ### Tests
+
+This will work if you have firefox and geckodriver installed on your system.
 
 You can run tests via your IDE or with Maven CLI with:
 
-```mvn clean test```
+```mvn clean test -Dtest=CloudStorageApplicationTests```
+
+However, if you have Docker there is a different test class that uses Testcontainers.
+
+You may run this by using Maven CLI as so:
+
+```mvn clean test -Dtest=GithubActionsTests```
+
+This avoids the need to install Firefox and geckodriver wherever you may need to run this.
+
+The test class with Testcontainers was implemented as a means to run this test class in 
+
+Github Actions without needing to install and configure Firefox and geckodriver.
+
+
+### Github Actions/Workflow
+
+This repository contains a Github Actions workflow that builds and simultaneously runs tests (te test class that uses Testcontainers). Once the build job finishes
+
+(builds successfully and tests pass), this triggers the integration job. The integration job simply creates a pull request and merges it inot master via the Github API,
+
+by using cURL. The only setup needed for this workflow is to set up the Github Personal Access Token in the secrets section of the settings. Instructions on creating a
+
+personal access token can be found [here](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token).
